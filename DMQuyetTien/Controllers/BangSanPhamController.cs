@@ -23,18 +23,11 @@ namespace DMQuyetTien.Controllers
         }
 
         // GET: /BangSanPham/Details/5
-        public ActionResult Details(int? id)
+        public FileResult Details(string id)
         {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            BangSanPham bangsanpham = db.BangSanPhams.Find(id);
-            if (bangsanpham == null)
-            {
-                return HttpNotFound();
-            }
-            return View(bangsanpham);
+            var path = Server.MapPath("~/App_Data/" + id);
+            return File(path, "images");
+
         }
 
         // GET: /BangSanPham/Create
