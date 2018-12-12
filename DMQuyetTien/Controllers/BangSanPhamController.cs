@@ -48,26 +48,30 @@ namespace DMQuyetTien.Controllers
             CheckBangSanPham(model);
             if (ModelState.IsValid)
             {
-                using (var scope = new TransactionScope()) {
+                using (var scope = new TransactionScope())
+                {
                     db.BangSanPhams.Add(model);
                     db.SaveChanges();
 
                     var path = Server.MapPath("~/App_Data");
                     path = path + "/" + model.id;
-                    if (Request.Files["HinhAnh"] != null && Request.Files["HinhAnh"].ContentLength > 0) {
+                    if (Request.Files["HinhAnh"] != null && Request.Files["HinhAnh"].ContentLength > 0)
+                    {
                         Request.Files["HinhAnh"].SaveAs(path);
 
                         scope.Complete();
+                        return RedirectToAction("Index");
                     }
-                    return RedirectToAction("Index");
-                }            
+
+                    else
+                        ModelState.AddModelError("HinhAnh", "Chua co hinh anh");
+                }
             }
-            else
-                ModelState.AddModelError("HinhAnh", "Chua co hinh anh");
 
             ViewBag.Loai_id = new SelectList(db.LoaiSanPhams, "id", "TenLoai", model.Loai_id);
             return View(model);
-        }
+        
+            }
         private void CheckBangSanPham(BangSanPham model) {
             if (model.GiaGoc < 0)
                 ModelState.AddModelError("GiaGoc", "Gia goc phai lon hon 0");
